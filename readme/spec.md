@@ -32,13 +32,24 @@ Data    |  ("Length" bytes) (ASCII)
 
 ## Master Keys
 
-The master keys are used to encrypt and decrypt data. They can be generated from the Encryption Service and are saved to the database. They are themselves encrypted via a user password using a [strong encyption method](https://github.com/laurent22/joplin/blob/fb6dee32ac035b00153106273135fb16be4b4fa5/ReactNativeClient/lib/services/EncryptionService.js#L263).
+The master keys are used to encrypt and decrypt data. They can be generated from the [Encryption Service](https://github.com/laurent22/joplin/blob/e648392330fae711d79ade2903c2f7e21e8f3425/ReactNativeClient/lib/services/EncryptionService.js) and are saved to the database. 
 
-These encrypted master keys are transmitted with the sync data so that they can be available to each client. Each client will need to supply the user password to decrypt each key.
+### Master Key Generation
 
+Master keys are currently 256-bit in size and depending on the client generated using the cryptographically strong [randombytes](https://github.com/laurent22/joplin/blob/e648392330fae711d79ade2903c2f7e21e8f3425/ReactNativeClient/lib/shim-init-node.js#L28) from [nodejses crypto library](https://nodejs.org/api/crypto.html#crypto_crypto_randombytes_size_callback) or for the [react native client](https://github.com/laurent22/joplin/blob/e648392330fae711d79ade2903c2f7e21e8f3425/ReactNativeClient/lib/shim-init-node.js) the library [react-Native-securerandom](https://github.com/rh389/react-native-securerandom).
+
+### Multiple Master Keys
 The application supports multiple master keys in order to handle cases where one offline client starts encrypting notes, then another offline client starts encrypting notes too, and later both sync. Both master keys will have to be decrypted separately with the user password.
 
 Only one master key can be active for encryption purposes. For decryption, the algorithm will check the Master Key ID in the header, then check if it's available to the current app and, if so, use this for decryption.
+
+### Master Key Encryption
+
+Master keys are themselves encrypted via a user password using a [strong encyption method: AES-256bit in OCB2 mode](https://github.com/laurent22/joplin/blob/fb6dee32ac035b00153106273135fb16be4b4fa5/ReactNativeClient/lib/services/EncryptionService.js#L263). 
+
+### Master Keys Storage
+
+These encrypted master keys are transmitted with the sync data so that they can be available to each client. Each client will need to supply the user password to decrypt each key.
 
 ## Encryption Service
 
