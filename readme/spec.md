@@ -49,7 +49,10 @@ Master keys are themselves encrypted via a user password using a [strong encypti
 
 ### Master Keys Storage
 
-These encrypted master keys are transmitted with the sync data so that they can be available to each client. Each client will need to supply the user password to decrypt each key.
+.  
+These encrypted master keys are transmitted with the sync data so that they can be available to each client. Each client will need to supply the user password to decrypt each key. You can find the file containing your encrypted masterkey using this script: TODO
+
+When Joplin is running the Master Keys reside loaded into the database and is decrypted to memory to be used.
 
 ## Encryption Service
 
